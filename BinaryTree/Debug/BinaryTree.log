@@ -1,0 +1,4 @@
+﻿  BinaryTree.cpp
+c:\users\jw\documents\visual studio 2015\projects\binarytree\binarytree\binarytree.cpp(102): warning C4715: 'BinaryTree::SearchData': not all control paths return a value
+  BinaryTree.vcxproj -> C:\Users\JW\documents\visual studio 2015\Projects\BinaryTree\Debug\BinaryTree.exe
+  BinaryTree.vcxproj -> C:\Users\JW\documents\visual studio 2015\Projects\BinaryTree\Debug\BinaryTree.pdb (Full PDB)
