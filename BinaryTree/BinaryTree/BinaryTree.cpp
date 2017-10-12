@@ -10,6 +10,7 @@ BinaryTree::BinaryTree() : Root(nullptr)
 
 BinaryTree::~BinaryTree()
 {
+	Clear();
 }
 
 
@@ -19,13 +20,15 @@ void BinaryTree::InsertData(int data)
 	newNode->data = data;
 
 	cout << "Insert Data : " << data << endl;
-	if (Root == nullptr)
-	{
+	if (IsEmpty())
 		Root = newNode;
-		cout << "InsertData : Root" << endl << endl;
-	}
 	else
-		InsertData(newNode, &Root);
+	{
+		if (!SearchData(data))
+			InsertData(newNode, &Root);
+		else
+			cout << "Data is alread exist" << endl;
+	}
 }
 
 void BinaryTree::InsertData(NODE* newNode, NODE** curNode)
@@ -33,31 +36,19 @@ void BinaryTree::InsertData(NODE* newNode, NODE** curNode)
 	NODE** nextNode;
 
 	if (newNode->data < (*curNode)->data)
-	{
 		nextNode = &(*curNode)->left;
-		cout << "Move Left" << endl;
-	}
 	else if (newNode->data >(*curNode)->data)
-	{
 		nextNode = &(*curNode)->right;
-		cout << "Move Right" << endl;
-	}
 
 	if (*nextNode == nullptr)
-	{
 		*nextNode = newNode;
-		cout << "Insert Data" << endl << endl;
-	}
 	else
-	{
 		InsertData(newNode, nextNode);
-		cout << "Recursive" << endl;
-	}
 }
 
 void BinaryTree::DeleteData(int data)
 {
-	if (Root == nullptr)
+	if (IsEmpty())
 	{
 		cout << "Tree is Empty" << endl;
 		return;
@@ -65,6 +56,11 @@ void BinaryTree::DeleteData(int data)
 
 	NODE** parentsPtr = nullptr;
 	NODE* targetNode = SearchData(data, parentsPtr, Root);
+	if (targetNode == nullptr)
+	{
+		cout << "Data not exist" << endl;
+		return;
+	}
 
 	//delete data is 
 	//Last Node
@@ -87,7 +83,10 @@ void BinaryTree::DeleteData(int data)
 
 		//minimum Node substitute Target Node
 		(*temp)->left = targetNode->left;
-		(*temp)->right = targetNode->right;
+		if (targetNode->right->data == (*temp)->data)
+			(*temp)->right = nullptr;
+		else
+			(*temp)->right = targetNode->right;
 		*parentsPtr = *temp;
 		*temp = nullptr;
 	}
@@ -95,8 +94,35 @@ void BinaryTree::DeleteData(int data)
 	delete targetNode;
 }
 
+void BinaryTree::Clear()
+{
+	if (IsEmpty())
+		return;
+
+	ClearData(Root);
+}
+
+void BinaryTree::ClearData(NODE* curNode)
+{
+	if (curNode->left != nullptr)
+		ClearData(curNode->left);
+
+	if (curNode->right != nullptr)
+		ClearData(curNode->right);
+
+	delete curNode;
+}
+
+bool BinaryTree::SearchData(int data)
+{
+	return false;
+}
+
 NODE* BinaryTree::SearchData(int data, NODE**& parentsPtr, NODE* curNode)
 {
+	if (curNode == nullptr)
+		return nullptr;
+
 	if (curNode->data == data)
 		return curNode;
 
@@ -109,7 +135,65 @@ NODE* BinaryTree::SearchData(int data, NODE**& parentsPtr, NODE* curNode)
 	SearchData(data, parentsPtr, *parentsPtr);
 }
 
-void BinaryTree::BFS_Search()
+void BinaryTree::PreOrder()
+{
+	if (!IsEmpty())
+	{
+		PreOrder(Root);
+		cout << endl;
+	}
+}
+
+void BinaryTree::PreOrder(NODE* curNode)
+{
+	cout << curNode->data << " ";
+
+	if (curNode->left != nullptr)
+		PreOrder(curNode->left);
+	if (curNode->right != nullptr)
+		PreOrder(curNode->right);
+}
+
+void BinaryTree::InOrder()
+{
+	if (!IsEmpty())
+	{
+		InOrder(Root);
+		cout << endl;
+	}
+}
+
+void BinaryTree::InOrder(NODE* curNode)
+{
+	if (curNode->left != nullptr)
+		InOrder(curNode->left);
+
+	cout << curNode->data << " ";
+
+	if (curNode->right != nullptr)
+		InOrder(curNode->right);
+}
+
+void BinaryTree::PostOrder()
+{
+	if (!IsEmpty())
+	{
+		PostOrder(Root);
+		cout << endl;
+	}
+}
+
+void BinaryTree::PostOrder(NODE* curNode)
+{
+	if (curNode->left != nullptr)
+		InOrder(curNode->left);
+	if (curNode->right != nullptr)
+		InOrder(curNode->right);
+
+	cout << curNode->data << " ";
+}
+
+void BinaryTree::BFS()
 {
 	QUEUE::Queue<NODE*> visitQueue;
 
@@ -128,7 +212,7 @@ void BinaryTree::BFS_Search()
 	}
 }
 
-void BinaryTree::DFS_Search()
+void BinaryTree::DFS()
 {
 	STACK::Stack<NODE*> visitStack;
 

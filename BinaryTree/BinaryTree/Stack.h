@@ -2,7 +2,6 @@
 #include <iostream>
 
 using namespace std;
-
 namespace STACK
 {
 	template <typename T>
@@ -22,7 +21,7 @@ namespace STACK
 	{
 	private:
 		NODE<T>* Head;
-	public :
+	public:
 		Stack() : Head(nullptr) {}
 		~Stack() { Clear(); }
 
@@ -40,17 +39,9 @@ namespace STACK
 		NODE<T>* newNode = new NODE<T>;
 		newNode->data = data;
 
-		if (IsEmpty())
-		{
-			Head = newNode;
-			return;
-		}
-
 		NODE<T>* next = Head;
-		while (next->next != nullptr)
-			next = next->next;
-
-		next->next = newNode;
+		Head = newNode;
+		newNode->next = next;
 	}
 
 	template <typename T>
@@ -63,25 +54,12 @@ namespace STACK
 		}
 
 		T data;
-		if (Head->next == nullptr)
-		{
-			data = Head->data;
-			delete Head;
-			Head = nullptr;
-		}
-		else
-		{
-			NODE<T>* target = Head;
-			NODE<T>* prev = Head;
-			while (target->next != nullptr)
-			{
-				prev = target;
-				target = target->next;
-			}
-			prev->next = nullptr;
-			data = target->data;
-			delete target;
-		}
+
+		NODE<T>* target = Head;
+		Head = target->next;
+		data = target->data;
+		delete target;
+
 		return data;
 	}
 
